@@ -20,7 +20,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Slf4j
 //J'autorise toute les domaine
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://192.168.40.163:4200")
 public class CustomerRestController {
     private BankAccountService bankAccountService;
 
