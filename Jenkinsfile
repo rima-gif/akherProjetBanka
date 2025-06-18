@@ -190,5 +190,30 @@ stage("Trivy Security Scan") {
         }
       }
     }
+
+     stage("Update Kubernetes Manifests") {
+      steps {
+        dir('k8s-manifests') {
+          git branch: 'main', credentialsId: 'github', url: 'https://github.com/rima-gif/k8s-manifests.git'
+
+          sh """
+            sed -i 's|image: rima603/bankabackend:.*|image: rima603/bankabackend:${BUILD_NUMBER}|' backend/deployment.yaml
+            sed -i 's|image: rima603/bankafront:.*|image: rima603/bankafront:${BUILD_NUMBER}|' frontend/deployment.yaml
+          """
+
+          withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+            sh '''
+              git config user.email "achourryma971@gmail.com"
+              git config user.name "rima-gif"
+              git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/rima-gif/k8s-manifests.git
+              git add backend/deployment.yaml frontend/deployment.yaml
+              git commit -m "Update image tags to build ${BUILD_NUMBER}" || echo "No changes to commit"
+              git push origin main
+            '''
+          }
+        }
+      }
+    }
+  }
 }
 }
