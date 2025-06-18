@@ -1,10 +1,11 @@
 pipeline {
   agent { label 'agent-node' }
 
-tools {
-  jdk 'Java 17'
-  maven 'Maven'
-}
+  tools {
+    jdk 'Java 17'
+    maven 'Maven'
+    // sonarqube-scanner doit être configuré dans Jenkins Tools (Global Tool Configuration)
+  }
 
   stages {
 
@@ -43,27 +44,26 @@ tools {
         }
       }
     }
+
     stage("SonarQube Analysis") {
       steps {
         dir('ebanking-backend') {
-          withSonarQubeEnv(installationName: 'sonarqube-server',credentialsId:'jenkins-sonarqube-token') {
+          withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') {
             sh "mvn sonar:sonar"
           }
         }
       }
     }
-stage('SonarQube Angular') {
-  steps {
-    withSonarQubeEnv(installationName: 'sonarqube-server',credentialsId:'jenkins-sonarqube-token') {  // Ton SonarQube server config, pas le scanner
-      def scannerHome = tool 'sonarqube-scanner'               // Le nom que tu as défini dans Tools
-      sh "${scannerHome}/bin/sonar-scanner"
+
+    stage('SonarQube Angular') {
+      steps {
+        withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') {
+          script {
+            def scannerHome = tool 'sonarqube-scanner'  // Le nom que tu as défini dans Tools
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+        }
+      }
     }
-  }
-}
-
-  
-
-
-
   }
 }
