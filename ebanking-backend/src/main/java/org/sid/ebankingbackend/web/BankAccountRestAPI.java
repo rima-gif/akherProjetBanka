@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "http://192.168.40.163:4200")
+@CrossOrigin(origins = "http://10.50.30.15:30080")
 public class BankAccountRestAPI {
     private final BankAccountRepository bankAccountRepository;
     private BankAccountService bankAccountService;
