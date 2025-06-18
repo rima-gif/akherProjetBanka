@@ -56,9 +56,8 @@ tools {
   steps {
     dir('ebanking-frontend') {
       withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') {
-        withSonarScanner('sonarqube-scanner') {
-          sh 'sonar-scanner'
-        }
+           sh 'sonar-scanner'
+        
       }
     }
   }
