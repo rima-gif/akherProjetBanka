@@ -4,8 +4,13 @@ pipeline {
   tools {
     jdk 'Java 17'
     maven 'Maven'
-    // sonarqube-scanner doit être configuré dans Jenkins Tools (Global Tool Configuration)
+    
   }
+   environment {
+    MAVEN_OPTS = '-Xmx1024m'
+    DOCKER_HUB_USER = 'rima603'
+    DOCKER_HUB_PASSWORD = credentials('dockerhub')
+   }
 
   stages {
 
@@ -67,5 +72,36 @@ pipeline {
       }
     }
   }
+      stage("Build Docker Images") {
+      steps {
+        script {
+          dir('ebanking-backend') {
+            sh """
+              docker build -t rima603/bankabackend:${BUILD_NUMBER} .
+              docker tag rima603/bankabackend:${BUILD_NUMBER} rima603/bankabackend:latest
+            """
+          }
+          dir('ebanking-frontend') {
+            sh """
+              docker build -t rima603/bankafront:${BUILD_NUMBER} .
+              docker tag rima603/bankafront:${BUILD_NUMBER} rima603/bankafront:latest
+            """
+          }
+        }
+      }
+    }
+      stage("Push Docker Images to Docker Hub") {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh """
+            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+            docker push rima603/bankabackend:${BUILD_NUMBER}
+            docker push rima603/bankabackend:latest
+            docker push rima603/bankafront:${BUILD_NUMBER}
+            docker push rima603/bankafront:latest
+          """
+        }
+      }
+    }
 }
 }
