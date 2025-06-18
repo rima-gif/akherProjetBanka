@@ -55,10 +55,10 @@ tools {
  stage("SonarQube Analysis - Angular") {
   steps {
     dir('ebanking-frontend') {
-withSonarQubeEnv('sonarqube-server') {
+          withSonarQubeEnv(installationName: 'sonarqube-server',credentialsId:'jenkins-sonarqube-token') {
   sh 'sonar-scanner'
 }
-         
+    }
         
       }
     }
