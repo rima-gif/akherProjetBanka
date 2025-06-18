@@ -50,6 +50,60 @@ pipeline {
       }
     }
 
+ stage('Start MySQL for Tests') {
+      steps {
+        script {
+          sh '''
+            docker rm -f mysql-test || true
+
+            docker run -d --name mysql-test -e MYSQL_ROOT_PASSWORD=root123 -e MYSQL_DATABASE=banckaccount -p 3306:3306 mysql:8.0
+
+            echo "⏳ Attente de démarrage de MySQL..."
+            for i in $(seq 1 20); do
+              if docker exec mysql-test mysqladmin ping -h127.0.0.1 -proot > /dev/null 2>&1; then
+                echo "✅ MySQL est prêt après $i tentatives."
+                break
+              else
+                echo "🔄 Tentative $i : MySQL pas encore prêt..."
+                sleep 3
+              fi
+            done
+
+            if ! docker exec mysql-test mysqladmin ping -h127.0.0.1 -proot > /dev/null 2>&1; then
+              echo "❌ Échec : MySQL n'est pas prêt après 20 tentatives."
+              docker logs mysql-test
+              exit 1
+            fi
+          '''
+        }
+      }
+    }
+
+    stage("Run Backend Unit Tests (JUnit)") {
+      steps {
+        dir('ebanking-backend') {
+          
+          sh 'mvn test'
+        }
+      }
+      post {
+        always {
+          junit 'ebanking-backend/target/surefire-reports/*.xml'
+        }
+      }
+    }
+
+    stage('Stop MySQL') {
+      steps {
+        sh '''
+          docker stop mysql-test || true
+          docker rm mysql-test || true
+        '''
+      }
+    }
+
+
+    
     stage("SonarQube Analysis") {
       steps {
         dir('ebanking-backend') {
