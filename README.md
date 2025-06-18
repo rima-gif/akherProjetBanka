@@ -6,7 +6,7 @@ L'application se compose des couches suivantes :
     - Ajouter des comptes
     - Ajouter des client
     - Effectuer un débit (Retrait)
-    - Effectuer un crédit (Versement)
+nt)
     - Effectuer un virement
     - Consulter un compte
 
