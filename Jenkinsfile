@@ -91,37 +91,38 @@ pipeline {
       }
     }
 stage("Trivy Security Scan") {
-      steps {
-        script {
-          sh '''
-            echo "🔍 Trivy scan rapide sur les images Docker..."
+  steps {
+    script {
+      sh '''
+        echo "🔍 Trivy scan rapide sur les images Docker..."
 
-            mkdir -p $HOME/.cache/trivy
+        # Crée le dossier cache si inexistant
+        mkdir -p $HOME/.cache/trivy
 
-            docker run --rm \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v $HOME/.cache/trivy:/root/.cache/ \
-              aquasec/trivy image \
-              --scanners vuln \
-            
-              --timeout 10m \
-              --severity HIGH,CRITICAL \
-              rima603/bankabackend:${BUILD_NUMBER} || true
+        # Scan backend
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $HOME/.cache/trivy:/root/.cache/ \
+          aquasec/trivy image \
+          --scanners vuln \
+          --timeout 10m \
+          --severity HIGH,CRITICAL \
+          rima603/bankabackend:${BUILD_NUMBER} || true
 
-            docker run --rm \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v $HOME/.cache/trivy:/root/.cache/ \
-              aquasec/trivy image \
-              --scanners vuln \
-             
-              --timeout 2m \
-              --severity HIGH,CRITICAL \
-              rima603/bankafront:${BUILD_NUMBER} || true
-          '''
-        }
-      }
+        # Scan frontend
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $HOME/.cache/trivy:/root/.cache/ \
+          aquasec/trivy image \
+          --scanners vuln \
+          --timeout 2m \
+          --severity HIGH,CRITICAL \
+          rima603/bankafront:${BUILD_NUMBER} || true
+      '''
     }
-    
+  }
+}
+
       stage("Push Docker Images to Docker Hub") {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
