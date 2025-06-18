@@ -46,7 +46,7 @@ tools {
     stage("SonarQube Analysis") {
       steps {
         dir('ebanking-backend') {
-          withSonarQubeEnv('sonarqube-server',credentialsId:'jenkins-sonarqube-token') {
+          withSonarQubeEnv(installationName: 'sonarqube-server',credentialsId:'jenkins-sonarqube-token') {
             sh "mvn sonar:sonar"
           }
         }
