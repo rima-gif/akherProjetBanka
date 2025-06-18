@@ -5,7 +5,7 @@ L'application se compose des couches suivantes :
 - Couche Service définissant les opérations suivantes :
     - Ajouter des comptes
     - Ajouter des client
-    - Effectuer un débit (Retrait)
+    - Effec
 nt)
     - Effectuer un virement
     - Consulter un compte
