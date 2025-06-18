@@ -52,16 +52,15 @@ tools {
         }
       }
     }
- stage("SonarQube Analysis - Angular") {
+stage('SonarQube Angular') {
   steps {
-    dir('ebanking-frontend') {
-      withSonarQubeEnv( installationName:'sonarqube-server',credentialsId:'jenkins-sonarqube-token') { 
-                        sh 'sonarqube-scanner'
-                    }
+    withSonarQubeEnv(installationName: 'sonarqube-server',credentialsId:'jenkins-sonarqube-token') {  // Ton SonarQube server config, pas le scanner
+      def scannerHome = tool 'sonarqube-scanner'               // Le nom que tu as défini dans Tools
+      sh "${scannerHome}/bin/sonar-scanner"
     }
-        
-      }
-    }
+  }
+}
+
   
 
 
