@@ -1,14 +1,9 @@
 pipeline {
-  agent { label 'jenkins-agent' }
+  agent { label 'agent-node' }
 
-  environment {
-    MAVEN_OPTS = '-Xmx1024m'
-    DOCKER_HUB_USER = 'rima603'
-    DOCKER_HUB_PASSWORD = credentials('dockerhub')
-    SONARQUBE_SERVER = 'sonarqube'
-    SONAR_HOST_URL = 'http://192.168.40.111:9000'
-    SONAR_AUTH_TOKEN = credentials('jenkins-sonarqube-token')
-  }
+tools {
+  jdk 'Java17'
+  maven 'Maven3'
 
   stages {
 
