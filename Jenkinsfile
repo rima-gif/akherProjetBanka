@@ -57,6 +57,7 @@ pipeline {
 
     stage('SonarQube Angular') {
       steps {
+          dir('ebanking-frontend') {
         withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'jenkins-sonarqube-token') {
           script {
             def scannerHome = tool 'sonarqube-scanner'  // Le nom que tu as défini dans Tools
@@ -66,4 +67,5 @@ pipeline {
       }
     }
   }
+}
 }
