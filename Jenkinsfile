@@ -43,5 +43,14 @@ tools {
         }
       }
     }
+    stage("SonarQube Analysis") {
+      steps {
+        dir('ebanking-backend') {
+          withSonarQubeEnv(credentialsId:'jenkins-sonarqube-token') {
+            sh "mvn sonar:sonar"
+          }
+        }
+      }
+    }
   }
 }
