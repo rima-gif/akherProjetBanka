@@ -103,7 +103,7 @@ stage("Trivy Security Scan") {
               -v $HOME/.cache/trivy:/root/.cache/ \
               aquasec/trivy image \
               --scanners vuln \
-             --skip-db-update \
+            
               --timeout 10m \
               --severity HIGH,CRITICAL \
               rima603/bankabackend:${BUILD_NUMBER} || true
@@ -113,7 +113,7 @@ stage("Trivy Security Scan") {
               -v $HOME/.cache/trivy:/root/.cache/ \
               aquasec/trivy image \
               --scanners vuln \
-              --skip-db-update \
+             
               --timeout 2m \
               --severity HIGH,CRITICAL \
               rima603/bankafront:${BUILD_NUMBER} || true
