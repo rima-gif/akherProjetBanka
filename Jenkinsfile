@@ -215,5 +215,35 @@ stage("Trivy Security Scan") {
       }
     }
   }
+  post {
+    success {
+        echo "✅ Pipeline exécuté avec succès !"
+        slackSend(
+            channel: '#team',
+            color: 'good',
+            message: "✅ *Succès du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            tokenCredentialId: 'slack-token-id'
+        )
+    }
+    failure {
+        echo "❌ Pipeline échoué."
+        slackSend(
+            channel: '#team',
+            color: 'danger',
+            message: "❌ *Échec du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            tokenCredentialId: 'slack-token-id'
+        )
+    }
+    unstable {
+        echo "⚠️ Pipeline instable."
+        slackSend(
+            channel: '#team',
+            color: 'warning',
+            message: "⚠️ *Pipeline instable* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            tokenCredentialId: 'slack-token-id'
+        )
+    }
+  }
 }
+
 
