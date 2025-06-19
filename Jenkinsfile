@@ -221,7 +221,7 @@ stage("Trivy Security Scan") {
         slackSend(
             channel: '#team',
             color: 'good',
-            message: "✅ *Succès du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            message: "✅ *Succès du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}\n@here",
             tokenCredentialId: '2df2a415-5034-413b-ad77-0c88bbcccd77	'
         )
     }
@@ -230,7 +230,7 @@ stage("Trivy Security Scan") {
         slackSend(
             channel: '#team',
             color: 'danger',
-            message: "❌ *Échec du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            message: "❌ *Échec du pipeline* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}\n@here",
             tokenCredentialId: '2df2a415-5034-413b-ad77-0c88bbcccd77	'
         )
     }
@@ -239,7 +239,7 @@ stage("Trivy Security Scan") {
         slackSend(
             channel: '#team',
             color: 'warning',
-            message: "⚠️ *Pipeline instable* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}",
+            message: "⚠️ *Pipeline instable* : `${env.JOB_NAME}` - Build #${env.BUILD_NUMBER}\n🔗 ${env.BUILD_URL}\n@here",
             tokenCredentialId: '2df2a415-5034-413b-ad77-0c88bbcccd77	'
         )
     }
